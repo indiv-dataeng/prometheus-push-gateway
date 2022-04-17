@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,21 +36,21 @@ public class LatencyWithGateway {
 
         // initiate both producer and consumer properties.
         Properties producerProperties = new Properties();
-        producerProperties.setProperty(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG,BOOTSTRAP_SERVERS);
-        producerProperties.setProperty(ProducerConfig.LINGER_MS_CONFIG,"0");
-        producerProperties.setProperty(ProducerConfig.ACKS_CONFIG,"all");
-        producerProperties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer");
-        producerProperties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer");
-        producerProperties.setProperty(ProducerConfig.MAX_BLOCK_MS_CONFIG,String.valueOf(Long.MAX_VALUE));
+        producerProperties.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG,BOOTSTRAP_SERVERS);
+        producerProperties.put(ProducerConfig.LINGER_MS_CONFIG,"0");
+        producerProperties.put(ProducerConfig.ACKS_CONFIG,"all");
+        producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        producerProperties.put(ProducerConfig.MAX_BLOCK_MS_CONFIG,String.valueOf(Long.MAX_VALUE));
 
         Properties consumerProperties = new Properties();
-        consumerProperties.setProperty(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG,BOOTSTRAP_SERVERS);
-        consumerProperties.setProperty(ConsumerConfig.GROUP_ID_CONFIG,"end2");
-        consumerProperties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"latest");
-        consumerProperties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"false");
-        consumerProperties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringDeserializer");
-        consumerProperties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringDeserializer");
-        consumerProperties.setProperty(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG,"0");
+        consumerProperties.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG,BOOTSTRAP_SERVERS);
+        consumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG,"end2");
+        consumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"latest");
+        consumerProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"false");
+        consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        consumerProperties.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG,"0");
 
         // initiate producer and consumer object.
         KafkaProducer<String,String> producer = new KafkaProducer<>(producerProperties);
