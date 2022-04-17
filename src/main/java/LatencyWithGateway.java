@@ -53,15 +53,15 @@ public class LatencyWithGateway {
         consumerProperties.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG,"0");
 
         // initiate producer and consumer object.
-        KafkaProducer<String,String> producer = new KafkaProducer<>(producerProperties);
-        KafkaConsumer<String,String> consumer = new KafkaConsumer<>(consumerProperties);
+        KafkaProducer<String,String> producer = new KafkaProducer<String,String>(producerProperties);
+        KafkaConsumer<String,String> consumer = new KafkaConsumer<String,String>(consumerProperties);
         consumer.subscribe(Collections.singleton(TOPIC));
 
         for (int i = 0; i < NUMBER_OF_MESSAGE; i++) {
             String msg = "Message -> " + i;
             long begin = System.nanoTime();
 
-            producer.send(new ProducerRecord<>(TOPIC,msg)).get();
+            producer.send(new ProducerRecord<String ,String>(TOPIC,msg)).get();
 
             Iterator<ConsumerRecord<String,String>> recordIter = consumer.poll(Duration.ofMillis(TIME_OUT)).iterator();
 
