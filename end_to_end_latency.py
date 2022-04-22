@@ -29,9 +29,13 @@ TIME_OUT = 3000
 PUSH_PG = True
 PG_ADDRESS = "localhost:9091"
 PG_JOB_NAME = "kafka_end_to_end_latency"
+PG_GROUPING_KEY = "end_to_end_latency"
 
 registry = CollectorRegistry()
-
+g_latency_avg = Gauge("kafka_end_to_end_avg_latency_ms", "Average Kafka end-to-end latency(ms)", registry=registry)
+g_latency_p50 = Gauge("kafka_end_to_end_p50_latency_ms", "Percentiles 50th Kafka end-to-end latency(ms)", registry=registry)
+g_latency_p99= Gauge("kafka_end_to_end_p99_latency_ms", "Percentiles 99th Kafka end-to-end latency(ms)", registry=registry)
+g_latency_p999 = Gauge("kafka_end_to_end_p999_latency_ms", "Percentiles 99.9th Kafka end-to-end latency(ms)", registry=registry)
 
 total_time = 0.0
 latencies = {}
@@ -128,5 +132,9 @@ print("Percentiles: 50th = {p50:.4f} ms".format(p50=p50))
 print("Percentiles: 99th = {p99:.4f} ms".format(p99=p99))
 print("Percentiles: 99.9th = {p999:.4f} ms".format(p999=p999))
 
-    
-
+# Push metrics to push gateway
+g_latency_avg.set(avgTime)
+g_latency_p50.set(p50)
+g_latency_p99.set(p99)
+g_latency_p999.set(p999)
+push_to_gateway(PG_ADDRESS, job=PG_JOB_NAME, registry=registry)
